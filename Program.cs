@@ -1,8 +1,4 @@
-﻿using System.Reflection.Metadata.Ecma335;
-using System.Security.Cryptography.X509Certificates;
-using System.Xml.Linq;
-
-namespace SpartaTextGame_YushinLee
+﻿namespace Sparta2ndWeek
 {
     internal class Program
     {
@@ -34,9 +30,9 @@ namespace SpartaTextGame_YushinLee
                         Section section2 = new Section();
                         section2.Inventory();
                         chosen = int.Parse(Console.ReadLine());
-                        if (chosen == 1)       
+                        if (chosen == 1)
                         {
-                            chosen = 4; break; 
+                            chosen = 4; break;
                         }
                         break;
                     case 3: //상점
@@ -45,7 +41,7 @@ namespace SpartaTextGame_YushinLee
                         chosen = int.Parse(Console.ReadLine());
                         if (chosen == 1)
                         {
-                            chosen = 5; break; 
+                            chosen = 5; break;
                         }
                         break;
                     case 4: //장착관리
@@ -93,12 +89,12 @@ namespace SpartaTextGame_YushinLee
                 Console.WriteLine("상태 보기");
                 Console.WriteLine("캐릭터의 정보가 표시됩니다.");
                 Console.WriteLine("");
-                int[] playerStats = { 1, 10, 5, 100};
+                int[] playerStats = { 1, 10, 5, 100 };
                 int level = playerStats[0];
                 int atk = playerStats[1];
                 int def = playerStats[2];
                 int hp = playerStats[3];
-                string sLevel = level.ToString("D2"); 
+                string sLevel = level.ToString("D2");
                 Console.WriteLine("Lv. {0}", sLevel);
                 Console.WriteLine("Shin ( 전사 )");
                 Console.WriteLine("공격력 : {0}", atk);
@@ -125,10 +121,10 @@ namespace SpartaTextGame_YushinLee
                 {
                     Console.WriteLine("{0} G", gold);
                 }
-                
-                
+
+
             }
-            
+
             //인벤토리
             public void Inventory()
             {
@@ -146,7 +142,7 @@ namespace SpartaTextGame_YushinLee
             }
 
             //장착 관리
-            public void ItemOnOff() 
+            public void ItemOnOff()
             {
                 Console.WriteLine("");
                 Console.WriteLine("인벤토리 - 장착 관리");

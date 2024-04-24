@@ -1,0 +1,23 @@
+{
+  "runtimeTarget": {
+    "name": ".NETCoreApp,Version=v8.0",
+    "signature": ""
+  },
+  "compilationOptions": {},
+  "targets": {
+    ".NETCoreApp,Version=v8.0": {
+      "Sparta2ndWeek/1.0.0": {
+        "runtime": {
+          "Sparta2ndWeek.dll": {}
+        }
+      }
+    }
+  },
+  "libraries": {
+    "Sparta2ndWeek/1.0.0": {
+      "type": "project",
+      "serviceable": false,
+      "sha512": ""
+    }
+  }
+}
