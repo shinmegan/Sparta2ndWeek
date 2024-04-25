@@ -15,59 +15,100 @@ namespace Sparta2ndWeek
             InfortantInformation information1 = new InfortantInformation();
             startScene1.Intro();
             int chosen = int.Parse(Console.ReadLine());
-            if (chosen == 0)
-            {
-                Console.WriteLine("잘못된 입력입니다.");
-            }
-
             while (true)
             {
-                switch (chosen)
+                if (chosen == 1 || chosen == 2 || chosen == 3)
                 {
-                    case 0: //나가기(시작화면으로)
-                        startScene1.Intro();
-                        chosen = int.Parse(Console.ReadLine());
-                        break;
-                    case 1: //상태보기
-                        information1.Stats();
-                        chosen = int.Parse(Console.ReadLine());
-                        break;
-                    case 2: //인벤토리
-                        information1.Inventory();
-                        chosen = int.Parse(Console.ReadLine());
-                        if (chosen == 1)
-                        {
-                            chosen = 4; continue;
-                        }
-                        break;
-                    case 3: //상점
-                        information1.Store();
-                        chosen = int.Parse(Console.ReadLine());
-                        if (chosen == 1)
-                        {
-                            chosen = 5; continue;
-                        }
-                        break;
-                    case 4: //장착관리
-                        information1.ItemOnOff();
-                        chosen = int.Parse(Console.ReadLine());
-                        break;
-                    case 5: //아이템구매
-                        information1.Buy();
-                        while (true)
-                        {
+                    switch (chosen)
+                    {
+                        case 1: //상태보기
+                            information1.Stats();
                             chosen = int.Parse(Console.ReadLine());
-                            if (chosen != 0)
-                                information1.BoughtList(chosen);
-                            else
-                                break;
-                        }
-                        break;
-                    default:
-                        Console.WriteLine("잘못된 입력입니다.");
-                        chosen = int.Parse(Console.ReadLine());
-                        break;
+                            while (true)
+                            {
+                                if (chosen == 0) //나가기
+                                {
+                                    startScene1.Intro();
+                                    break;
+                                }
+                                else
+                                    Console.WriteLine("잘못된 입력입니다.");
+                                    chosen = int.Parse(Console.ReadLine());
+                            }
+                            break;
+                        case 2: //인벤토리
+                            information1.Inventory();
+                            chosen = int.Parse(Console.ReadLine());
+                            while (true)
+                            {
+                                if (chosen == 0) //나가기
+                                {
+                                    startScene1.Intro();
+                                    break;
+                                }
+                                else if (chosen == 1) //장착관리
+                                {
+                                    //스위치
+                                    information1.ItemOnOff();
+                                    List<int> select = new List<int>();
+                                }
+                                else
+                                    Console.WriteLine("잘못된 입력입니다.");
+                                    chosen = int.Parse(Console.ReadLine());
+                            }
+                            break;
+                        case 3: //상점
+                            information1.Store();
+                            chosen = int.Parse(Console.ReadLine());
+                            while (true)
+                            {
+                                if (chosen == 0) //나가기
+                                {
+                                    startScene1.Intro();
+                                    break;
+                                }
+                                else if (chosen == 1) //아이템 구매화면
+                                {
+                                    information1.Buy();
+                                    chosen = int.Parse(Console.ReadLine()); //0을 선택하면 메인화면으로// 1구매를 선택하면
+                                    while (true)
+                                    {
+                                        if (chosen == 0)
+                                        {
+                                            startScene1.Intro();
+                                            break;
+                                        }
+                                        else if (chosen == 1 || chosen == 2 || chosen == 3 || chosen == 4 || chosen == 5 || chosen == 6)
+                                        {
+                                            while (true)
+                                            {
+                                                information1.BoughtList(chosen);
+                                                chosen = int.Parse(Console.ReadLine());
+                                                if (chosen == 0)
+                                                {
+                                                    startScene1.Intro();
+                                                    break;
+                                                }
+                                            }
+                                        }
+                                        else
+                                        {
+                                            Console.WriteLine("잘못된 입력입니다.");
+                                            chosen = int.Parse(Console.ReadLine());
+                                        }
+                                    }
+                                    break;
+                                }
+                                else
+                                    Console.WriteLine("잘못된 입력입니다.");
+                                    chosen = int.Parse(Console.ReadLine());
+                            }
+                            break;
+                    }
                 }
+                else
+                    Console.WriteLine("잘못된 입력입니다.");
+                    chosen = int.Parse(Console.ReadLine());
             }
         }
 
@@ -94,16 +135,70 @@ namespace Sparta2ndWeek
             //현재 재화상태
             int gold = 1500;
             
-            public void voidGold(int minus)
+            public void GoldCaculation(int a)
             {
-                if (gold >= minus)
+                switch (a)
                 {
-                    gold -= minus;
-                    Console.WriteLine("구매를 완료했습니다.");
-                }
-                else 
-                {
-                    Console.WriteLine("Gold 가 부족합니다.");
+                    case 1:
+                        if (gold >= 1000)
+                        {
+                            gold -= 1000;
+                            items.Add(a, "수련자 갑옷     | 방어력 +5  | 수련에 도움을 주는 갑옷입니다.                   ");
+                            Console.WriteLine("구매를 완료했습니다.");
+                        }
+                        else
+                            Console.WriteLine("Gold 가 부족합니다.");
+                        break;
+                    case 2:
+                        if (gold >= 1800)
+                        {
+                            gold -= 1800;
+                            items.Add(a, "무쇠갑옷        | 방어력 +9  | 무쇠로 만들어져 튼튼한 갑옷입니다.               ");
+                            Console.WriteLine("구매를 완료했습니다.");
+                        }
+                        else
+                            Console.WriteLine("Gold 가 부족합니다.");
+                        break;
+                    case 3:
+                        if (gold >= 3500)
+                        {
+                            gold -= 3500;
+                            items.Add(a, "스파르타의 갑옷 | 방어력 +15 | 스파르타의 전사들이 사용했다는 전설의 갑옷입니다.");
+                            Console.WriteLine("구매를 완료했습니다.");
+                        }
+                        else
+                            Console.WriteLine("Gold 가 부족합니다.");
+                        break;
+                    case 4:
+                        if (gold >= 600)
+                        {
+                            gold -= 600;
+                            items.Add(a, "낡은 검         | 공격력 +2  | 쉽게 볼 수 있는 낡은 검 입니다.                  ");
+                            Console.WriteLine("구매를 완료했습니다.");
+                        }
+                        else
+                            Console.WriteLine("Gold 가 부족합니다.");
+                        break;
+                    case 5:
+                        if (gold >= 1500)
+                        {
+                            gold -= 1500;
+                            items.Add(a, "청동 도끼       | 공격력 +5  |  어디선가 사용됐던거 같은 도끼입니다.            ");
+                            Console.WriteLine("구매를 완료했습니다.");
+                        }
+                        else
+                            Console.WriteLine("Gold 가 부족합니다.");
+                        break;
+                    case 6:
+                        if (gold >= 2700)
+                        {
+                            gold -= 2700;
+                            items.Add(a, "스파르타의 창   | 공격력 +7  | 스파르타의 전사들이 사용했다는 전설의 창입니다.  ");
+                            Console.WriteLine("구매를 완료했습니다.");
+                        }
+                        else
+                            Console.WriteLine("Gold 가 부족합니다.");
+                        break;
                 }
             }
             //구매 목록
@@ -118,36 +213,7 @@ namespace Sparta2ndWeek
                         Console.WriteLine("잘못된 입력입니다.");
                     else 
                     {
-                        if (a == 1)
-                        {
-                            items.Add(a, "수련자 갑옷     | 방어력 +5  | 수련에 도움을 주는 갑옷입니다.                   ");
-                            voidGold(1000);
-                        } 
-                        else if (a == 2)
-                        {
-                            items.Add(a, "무쇠갑옷        | 방어력 +9  | 무쇠로 만들어져 튼튼한 갑옷입니다.               ");
-                            voidGold(1800);
-                        } 
-                        else if (a == 3)
-                        {
-                            items.Add(a, "스파르타의 갑옷 | 방어력 +15 | 스파르타의 전사들이 사용했다는 전설의 갑옷입니다.");
-                            voidGold(3500);
-                        }
-                        else if (a == 4)
-                        {
-                            items.Add(a, "낡은 검         | 공격력 +2  | 쉽게 볼 수 있는 낡은 검 입니다.                  ");
-                            voidGold(600);
-                        }
-                        else if (a == 5)
-                        {
-                            items.Add(a, "청동 도끼       | 공격력 +5  |  어디선가 사용됐던거 같은 도끼입니다.            ");
-                            voidGold(1500);
-                        }
-                        else if (a == 6)
-                        {
-                            items.Add(a, "스파르타의 창   | 공격력 +7  | 스파르타의 전사들이 사용했다는 전설의 창입니다.  ");
-                            voidGold(2700);
-                        }
+                        GoldCaculation(a);
                     }
                 }
                 else //데이터 존재
@@ -158,36 +224,7 @@ namespace Sparta2ndWeek
                     {
                         if (!items.ContainsKey(a))
                         {
-                            if (a == 1)
-                            {
-                                items.Add(a, "수련자 갑옷     | 방어력 +5  | 수련에 도움을 주는 갑옷입니다.                   ");
-                                voidGold(1000);
-                            }
-                            else if (a == 2)
-                            {
-                                items.Add(a, "무쇠갑옷        | 방어력 +9  | 무쇠로 만들어져 튼튼한 갑옷입니다.               ");
-                                voidGold(1800);
-                            } 
-                            else if (a == 3)
-                            {
-                                items.Add(a, "스파르타의 갑옷 | 방어력 +15 | 스파르타의 전사들이 사용했다는 전설의 갑옷입니다.");
-                                voidGold(3500);
-                            } 
-                            else if (a == 4)
-                            {
-                                items.Add(a, "낡은 검         | 공격력 +2  | 쉽게 볼 수 있는 낡은 검 입니다.                  ");
-                                voidGold(600);
-                            }   
-                            else if (a == 5)
-                            {
-                                items.Add(a, "청동 도끼       | 공격력 +5  |  어디선가 사용됐던거 같은 도끼입니다.            ");
-                                voidGold(1500);
-                            }
-                            else if (a == 6)
-                            {
-                                items.Add(a, "스파르타의 창   | 공격력 +7  | 스파르타의 전사들이 사용했다는 전설의 창입니다.  ");
-                                voidGold(2700);
-                            }
+                            GoldCaculation(a);
                         }
                         else
                         {
