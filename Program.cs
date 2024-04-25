@@ -58,7 +58,7 @@ namespace Sparta2ndWeek
                                             startScene1.Intro();
                                             break;
                                         }
-                                        else if (!information1.ListEmpty()) //구매목록에 아이템이 있으면,
+                                        else if (chosen >= information1.NumberOfBought()) //선택한 숫자와 구매아이템 개수에 오류가 없으면,
                                         {
                                             while (true)
                                             {
@@ -71,6 +71,7 @@ namespace Sparta2ndWeek
                                                     break;
                                                 }
                                             }
+                                            break;
                                         }
                                         else
                                         {
@@ -118,6 +119,7 @@ namespace Sparta2ndWeek
                                                     break;
                                                 }
                                             }
+                                            break;
                                         }
                                         else
                                         {
@@ -126,10 +128,12 @@ namespace Sparta2ndWeek
                                         }
                                     }
                                     break;
+                                    
                                 }
                                 else
                                     Console.WriteLine(" 잘못된 입력입니다.");
                                     chosen = int.Parse(Console.ReadLine());
+                                    
                             }
                             break;
                     }
@@ -233,6 +237,13 @@ namespace Sparta2ndWeek
 
             //구매 목록
             Dictionary<int, string> items = new Dictionary<int, string>();
+
+            //구매 목록 내 아이템 갯수
+            public int NumberOfBought()
+            {
+                int a = items.Count;
+                return a;
+            }
 
             //구매에 따른 소지 아이템 목록 작성
             public void BoughtList(int a)
@@ -376,25 +387,8 @@ namespace Sparta2ndWeek
                 Console.Write(" 원하시는 행동을 입력해주세요. \n >> ");
             }
 
-            //아이템 목록이 비어있는지 확인
-            public bool ListEmpty()
-            {
-                if (items.Count == 0)
-                {
-                    return true;
-                }
-                return false;
-
-            }
-            //아이템 목록에 해당 숫자의 아이템이 있는지 확인
-            //public bool CheckItemNumber(int a)
-            //{
-            //    if (items.ContainsValue[a]) //값 확인
-            //    {
-            //        return true;
-            //    }
-            //    return false;
-            //}
+            //items딕셔너리 value 리스트
+            List<string> valueList = new List<string>();
 
             //장착 중인 아이템 리스트
             Dictionary<int, string> onList = new Dictionary<int, string>();
@@ -402,16 +396,13 @@ namespace Sparta2ndWeek
             //아이템 장착 및 해제
             public void DoOnOff(int a)
             {
-                if (items.TryGetValue(a, out string one))
+                if (!onList.ContainsKey(a))
                 {
-                    if (!onList.ContainsKey(a))
-                    {
-                        onList.Add(a, one); //장착(onList에 추가)
-                    }
-                    else
-                    {
-                        onList.Remove(a); //미장착(onList에서 제거)
-                    }
+                    onList.Add(a, valueList[a - 1]); //장착(onList에 추가)
+                }
+                else
+                {
+                    onList.Remove(a); //미장착(onList에서 제거)
                 }
             }
 
@@ -420,10 +411,9 @@ namespace Sparta2ndWeek
             {
                 if (items.Count > 0)
                 {
-                    List<string> valueList = new List<string>();
                     foreach (KeyValuePair<int, string> item in items)
                     {
-                        if (item.Key != null)
+                        if (item.Key != null && !valueList.Contains(item.Value))
                         {
                             valueList.Add(item.Value);
                         }
