@@ -59,7 +59,7 @@ namespace Sparta2ndWeek
                                             startScene1.Intro();
                                             break;
                                         }
-                                        else if (chosen >= information1.NumberOfBought()) //선택한 숫자와 구매아이템 개수에 오류가 없으면,
+                                        else if (chosen <= information1.NumberOfBought()) //선택한 숫자와 구매아이템 개수에 오류가 없으면,
                                         {
                                             while (true)
                                             {
@@ -134,7 +134,6 @@ namespace Sparta2ndWeek
                                 else
                                     Console.WriteLine(" 잘못된 입력입니다.");
                                     chosen = int.Parse(Console.ReadLine());
-                                    
                             }
                             break;
                     }
@@ -242,7 +241,7 @@ namespace Sparta2ndWeek
             //구매 목록 내 아이템 갯수
             public int NumberOfBought()
             {
-                int a = items.Count;
+                int a = valueList.Count;
                 return a;
             }
 
@@ -400,7 +399,7 @@ namespace Sparta2ndWeek
             //아이템 장착 및 해제
             public void DoOnOff(int a)
             {
-                if (!onList.ContainsKey(a))
+                if (!onList.ContainsKey(a) && valueList.Count!=0)
                 {
                     onList.Add(a, valueList[a - 1]); //장착(onList에 추가)
                     statReflectList.Add(valueList[a - 1]);
@@ -420,31 +419,20 @@ namespace Sparta2ndWeek
                     foreach (KeyValuePair<int, string> item in items)
                     {
                         if (item.Key != null && !valueList.Contains(item.Value))
-                        {
                             valueList.Add(item.Value);
-                        }
                     }
                     foreach (string value in valueList)
                     {
                         for (int i = 1; i < valueList.Count + 1; i++)
                         {
                             if (onList.ContainsKey(i) && x == 1) //장착관리 목록리스트
-                            {
                                 Console.WriteLine(" - {0} [E]{1}", i, value);
-                            }
                             else if (!onList.ContainsKey(i) && x == 1)
-                            {
                                 Console.WriteLine(" - {0} {1}", i, value);
-                            }
                             else if (onList.ContainsKey(i) && x == 0) //인벤토리 리스트
-                            {
                                 Console.WriteLine(" - [E]{0}", value);
-                            }
                             else if (!onList.ContainsKey(i) && x == 0)
-                            {
                                 Console.WriteLine(" - {0}", value);
-                            }
-                                
                         }
                     }
                 }
@@ -492,7 +480,7 @@ namespace Sparta2ndWeek
                 int def = playerStats[2];
                 int hp = playerStats[3];
                 int a = 0, a1 = 0, a2 = 0, d = 0, d1 = 0, d2 = 0;
-                // statReflectList
+
                 if (statReflectList != null)
                 {
                     for (int i = 0; i < statReflectList.Count; i++)
