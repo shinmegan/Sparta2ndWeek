@@ -2,6 +2,7 @@
 using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.Design;
+using System.Reflection.Metadata.Ecma335;
 using System.Security.Cryptography.X509Certificates;
 using System.Xml.Linq;
 
@@ -46,11 +47,38 @@ namespace Sparta2ndWeek
                                     startScene1.Intro();
                                     break;
                                 }
-                                else if (chosen == 1) //장착관리
+                                else if (chosen == 1) //장착 관리
                                 {
-                                    //스위치
                                     information1.ItemOnOff();
-                                    List<int> select = new List<int>();
+                                    chosen = int.Parse(Console.ReadLine());
+                                    while (true)
+                                    {
+                                        if (chosen == 0) //나가기
+                                        {
+                                            startScene1.Intro();
+                                            break;
+                                        }
+                                        else if (!information1.ListEmpty() && information1.CheckItemNumber(chosen)) //구매목록에 아이템이 있으면,
+                                        {
+                                            while (true)
+                                            {
+                                                information1.DoOnOff(chosen);
+                                                information1.ItemOnOff();
+                                                chosen = int.Parse(Console.ReadLine());
+                                                if (chosen == 0)
+                                                {
+                                                    startScene1.Intro();
+                                                    break;
+                                                }
+                                            }
+                                        }
+                                        else
+                                        {
+                                            Console.WriteLine("잘못된 입력입니다.");
+                                            chosen = int.Parse(Console.ReadLine());
+                                        }
+                                    }
+                                    break;
                                 }
                                 else
                                     Console.WriteLine("잘못된 입력입니다.");
@@ -203,6 +231,7 @@ namespace Sparta2ndWeek
             }
             //구매 목록
             Dictionary<int, string> items = new Dictionary<int, string>();
+
             //구매에 따른 소지 아이템 목록 작성
             public void BoughtList(int a)
             {
@@ -233,6 +262,8 @@ namespace Sparta2ndWeek
                     }
                 }
             }
+
+            //아이템 정보
             public void ItemList(int x) //x=0: 상점 //x=-1: 아이템구매
             {
                 int[,] itemStats = new int[6, 2]
@@ -338,15 +369,48 @@ namespace Sparta2ndWeek
                 Console.WriteLine("");
                 Console.Write("원하시는 행동을 입력해주세요. \n>> ");
             }
-            //장착 관리
-            public void ItemOnOff()
+            //아이템 목록이 비어있는지 확인
+            public bool ListEmpty()
             {
-                Console.WriteLine("");
-                Console.WriteLine("인벤토리 - 장착 관리");
-                Console.WriteLine("보유 중인 아이템을 관리할 수 있습니다.");
-                Console.WriteLine("");
-                Console.WriteLine("[아이템 목록]");
-                //아이템 목록
+                if (items.Count == 0)
+                {
+                    return true;
+                }
+                return false;
+
+            }
+            //아이템 목록에 해당 숫자의 아이템이 있는지 확인
+            public bool CheckItemNumber(int a)
+            {
+                if (items.ContainsKey(a))
+                {
+                    return true;
+                }
+                return false;
+            }
+
+            //장착 중인 아이템 리스트
+            Dictionary<int, string> onList = new Dictionary<int, string>();
+
+            //아이템 장착 및 해제
+            public void DoOnOff(int a)
+            {
+                if (items.TryGetValue(a, out string one))
+                {
+                    if (!onList.ContainsKey(a))
+                    {
+                        onList.Add(a, one); //장착(onList에 추가)
+                    }
+                    else
+                    {
+                        onList.Remove(a); //미장착(onList에서 제거)
+                    }
+                }
+            }
+
+            //장착 표시된 아이템 리스트
+            public void OnOffMarkList(int x) //x=0:인벤토리 x=1:장착관리
+            {
                 if (items.Count > 0)
                 {
                     List<string> valueList = new List<string>();
@@ -359,9 +423,40 @@ namespace Sparta2ndWeek
                     }
                     foreach (string value in valueList)
                     {
-                        Console.WriteLine("- {0}", value);
+                        for (int i = 1; i < valueList.Count + 1; i++)
+                        {
+                            if (onList.ContainsKey(i) && x == 1) //장착관리 목록리스트
+                            {
+                                Console.WriteLine("- {0} [E]{1}", i, value);
+                            }
+                            else if (!onList.ContainsKey(i) && x == 1)
+                            {
+                                Console.WriteLine("- {0} {1}", i, value);
+                            }
+                            else if (onList.ContainsKey(i) && x == 0) //인벤토리 리스트
+                            {
+                                Console.WriteLine("- [E]{0}", value);
+                            }
+                            else if (!onList.ContainsKey(i) && x == 0)
+                            {
+                                Console.WriteLine("- {0}", value);
+                            }
+                                
+                        }
                     }
                 }
+            }
+
+
+            //장착 관리
+            public void ItemOnOff()
+            {
+                Console.WriteLine("");
+                Console.WriteLine("인벤토리 - 장착 관리");
+                Console.WriteLine("보유 중인 아이템을 관리할 수 있습니다.");
+                Console.WriteLine("");
+                Console.WriteLine("[아이템 목록]");
+                OnOffMarkList(1); //x=0:인벤토리 x=1:장착관리
                 Console.WriteLine("");
                 Console.WriteLine("0. 나가기");
                 Console.WriteLine("");
@@ -375,22 +470,7 @@ namespace Sparta2ndWeek
                 Console.WriteLine("보유 중인 아이템을 관리할 수 있습니다.");
                 Console.WriteLine("");
                 Console.WriteLine("[아이템 목록]");
-                //아이템 목록
-                if (items.Count > 0)
-                {
-                    List<string> valueList = new List<string>();
-                    foreach(KeyValuePair<int, string> item in items) 
-                    {
-                        if (item.Key != null)
-                        {
-                            valueList.Add(item.Value);
-                        }
-                    }
-                    foreach(string value in valueList)
-                    {
-                        Console.WriteLine("- {0}",value);
-                    }
-                }
+                OnOffMarkList(0); //x=0:인벤토리 x=1:장착관리
                 Console.WriteLine("");
                 Console.WriteLine("1. 장착 관리");
                 Console.WriteLine("0. 나가기");
@@ -415,7 +495,6 @@ namespace Sparta2ndWeek
                 Console.WriteLine("공격력 : {0}", atk);
                 Console.WriteLine("방어력 : {0}", def);
                 Console.WriteLine("체 력 : {0}", hp);
-
                 Console.WriteLine("Gold :{0} G", gold);
                 //장비 착용 여부에 따라서 if절을 이용하여 stat 올리기
                 Console.WriteLine("");
