@@ -168,6 +168,15 @@ namespace Sparta2ndWeek
             //재화
             int gold = 1500;
 
+            //기존 아이템 정보 리스트
+            List<string> originalValueList = new List<string>();
+
+            //아이템 가격 딕셔너리
+            Dictionary<int, int> priceDic = new Dictionary<int, int>();
+
+            //능력치 딕셔너리
+            Dictionary<int, int> statsDic = new Dictionary<int, int>();
+
             //구매목록(구매번호,구매정보) 딕셔너리
             Dictionary<int, string> boughtDic = new Dictionary<int, string>();
 
@@ -179,6 +188,7 @@ namespace Sparta2ndWeek
 
             //장착목록(장착번호,장착정보) 딕셔너리
             Dictionary<int, string> onDic = new Dictionary<int, string>();
+
 
             //장착 및 해제된 아이템정보 추가
             public void AddOnOffData(int a)
@@ -203,70 +213,19 @@ namespace Sparta2ndWeek
             }
 
             //구매시 재화감소, 구매정보(키: 구매번호, 값: 구매번호에 해당하는 아이템 정보) 추가
-            public void TryBuying(int a)
+            public void TryBuying(int a) //a는 1부터 시작
             {
-                switch (a)
+                for (int i = 0; i < 1; i++)
                 {
-                    case 1:
-                        if (gold >= 1000)
-                        {
-                            gold -= 1000;
-                            boughtDic.Add(a, "수련자 갑옷     | 방어력 +5  | 수련에 도움을 주는 갑옷입니다.                   ");
-                            Console.WriteLine(" 구매를 완료했습니다.");
-                        }
-                        else
-                            Console.WriteLine(" Gold 가 부족합니다.");
-                        break;
-                    case 2:
-                        if (gold >= 1800)
-                        {
-                            gold -= 1800;
-                            boughtDic.Add(a, "무쇠갑옷        | 방어력 +9  | 무쇠로 만들어져 튼튼한 갑옷입니다.               ");
-                            Console.WriteLine(" 구매를 완료했습니다.");
-                        }
-                        else
-                            Console.WriteLine(" Gold 가 부족합니다.");
-                        break;
-                    case 3:
-                        if (gold >= 3500)
-                        {
-                            gold -= 3500;
-                            boughtDic.Add(a, "스파르타의 갑옷 | 방어력 +15 | 스파르타의 전사들이 사용했다는 전설의 갑옷입니다.");
-                            Console.WriteLine(" 구매를 완료했습니다.");
-                        }
-                        else
-                            Console.WriteLine(" Gold 가 부족합니다.");
-                        break;
-                    case 4:
-                        if (gold >= 600)
-                        {
-                            gold -= 600;
-                            boughtDic.Add(a, "낡은 검         | 공격력 +2  | 쉽게 볼 수 있는 낡은 검 입니다.                  ");
-                            Console.WriteLine(" 구매를 완료했습니다.");
-                        }
-                        else
-                            Console.WriteLine(" Gold 가 부족합니다.");
-                        break;
-                    case 5:
-                        if (gold >= 1500)
-                        {
-                            gold -= 1500;
-                            boughtDic.Add(a, "청동 도끼       | 공격력 +5  |  어디선가 사용됐던거 같은 도끼입니다.            ");
-                            Console.WriteLine(" 구매를 완료했습니다.");
-                        }
-                        else
-                            Console.WriteLine(" Gold 가 부족합니다.");
-                        break;
-                    case 6:
-                        if (gold >= 2700)
-                        {
-                            gold -= 2700;
-                            boughtDic.Add(a, "스파르타의 창   | 공격력 +7  | 스파르타의 전사들이 사용했다는 전설의 창입니다.  ");
-                            Console.WriteLine(" 구매를 완료했습니다.");
-                        }
-                        else
-                            Console.WriteLine(" Gold 가 부족합니다.");
-                        break;
+                    i += a;
+                    if (gold >= priceDic[i]) 
+                    {
+                        gold -= priceDic[i];
+                        boughtDic.Add(i, originalValueList[i - 1]);
+                        Console.WriteLine(" 구매를 완료했습니다.");
+                    }
+                    else
+                        Console.WriteLine(" Gold 가 부족합니다.");
                 }
             }
 
@@ -301,111 +260,49 @@ namespace Sparta2ndWeek
                 }
             }
 
-            //아이템 목록(상점, 아이템구매)
-            public void StoreItemList(int x) //x=0: 상점 //x=-1: 아이템구매
-            {
-                int[,] itemArray = new int[6, 2]
-                {
-                    {0, 1},
-                    {0, 1},
-                    {0, 1},
-                    {0, 1},
-                    {0, 1},
-                    {0, 1}
-                };
-                for (int i = 0; i < 6; i++)
-                {
-                    for (int j = 0; j < 2; j++)
-                    {
-                        if (itemArray[i, j] == 0 && x == 0)
-                        {
-                            Console.Write(" - ");
-                        }
-                        else if (itemArray[i, j] == 0 && x == 1)
-                        {
-                            int k = i + 1;
-                            Console.Write(" - {0} ", k);
-                        }
-                        else if (itemArray[i, j] == 1)
-                        {
-                            switch (i)
-                            {
-                                case 0:
-                                    if (x==0 && boughtDic.ContainsKey(1)) //구매된 아이템 딕셔너리에서 1번 키값이 존재하면, 상점창에 구매완료 표시
-                                        Console.Write("수련자 갑옷     | 방어력 +5  | 수련에 도움을 주는 갑옷입니다.                   |  구매완료");
-                                    else
-                                        Console.Write("수련자 갑옷     | 방어력 +5  | 수련에 도움을 주는 갑옷입니다.                   |  1000 G");
-                                    break;
-                                case 1:
-                                    if (x == 0 && boughtDic.ContainsKey(2))
-                                        Console.Write("무쇠갑옷        | 방어력 +9  | 무쇠로 만들어져 튼튼한 갑옷입니다.               |  구매완료");
-                                    else
-                                        Console.Write("무쇠갑옷        | 방어력 +9  | 무쇠로 만들어져 튼튼한 갑옷입니다.               |  1800 G");
-                                    break;
-                                case 2:
-                                    if (x == 0 && boughtDic.ContainsKey(3))
-                                        Console.Write("스파르타의 갑옷 | 방어력 +15 | 스파르타의 전사들이 사용했다는 전설의 갑옷입니다.|  구매완료");
-                                    else
-                                        Console.Write("스파르타의 갑옷 | 방어력 +15 | 스파르타의 전사들이 사용했다는 전설의 갑옷입니다.|  3500 G");
-                                    break;
-                                case 3:
-                                    if (x == 0 && boughtDic.ContainsKey(4))
-                                        Console.Write("낡은 검         | 공격력 +2  | 쉽게 볼 수 있는 낡은 검 입니다.                  |   구매완료");
-                                    else
-                                        Console.Write("낡은 검         | 공격력 +2  | 쉽게 볼 수 있는 낡은 검 입니다.                  |   600 G");
-                                    break;
-                                case 4:
-                                    if (x == 0 && boughtDic.ContainsKey(5))
-                                        Console.Write("청동 도끼       | 공격력 +5  |  어디선가 사용됐던거 같은 도끼입니다.            |  구매완료");
-                                    else
-                                        Console.Write("청동 도끼       | 공격력 +5  |  어디선가 사용됐던거 같은 도끼입니다.            |  1500 G");
-                                    break;
-                                case 5:
-                                    if (x == 0 && boughtDic.ContainsKey(6))
-                                        Console.Write("스파르타의 창   | 공격력 +7  | 스파르타의 전사들이 사용했다는 전설의 창입니다.  |  구매완료");
-                                    else
-                                        Console.Write("스파르타의 창   | 공격력 +7  | 스파르타의 전사들이 사용했다는 전설의 창입니다.  |  2700 G");
-                                    break;
-                            }
-                        }
-                    }
-                    Console.WriteLine();
-                }
-            }
-
-            //상점 화면
-            public void StoreScene()
+            //상태보기 화면
+            public void StatsScene()
             {
                 Console.WriteLine("");
                 Console.WriteLine("");
-                Console.WriteLine(" 상점");
-                Console.WriteLine(" 필요한 아이템을 얻을 수 있는 상점입니다.");
+                Console.WriteLine(" 상태 보기");
+                Console.WriteLine(" 캐릭터의 정보가 표시됩니다.");
                 Console.WriteLine("");
-                Console.WriteLine(" [보유 골드]");
-                Console.WriteLine(" {0} G", gold);
+                ChangedStats();
+                Console.WriteLine(" Gold : {0} G", gold);
                 Console.WriteLine("");
-                Console.WriteLine(" [아이템 목록]");
-                StoreItemList(0); 
-                Console.WriteLine("");
-                Console.WriteLine(" 1. 아이템 구매");
                 Console.WriteLine(" 0. 나가기");
                 Console.WriteLine("");
                 Console.Write(" 원하시는 행동을 입력해주세요. \n >> ");
             }
 
-            //상점-아이템구매 화면
-            public void Buy()
+            //인벤토리 화면
+            public void InventoryScene()
             {
                 Console.WriteLine("");
                 Console.WriteLine("");
-                Console.WriteLine(" 상점 - 아이템 구매");
-                Console.WriteLine(" 필요한 아이템을 얻을 수 있는 상점입니다.");
-                Console.WriteLine("");
-                Console.WriteLine(" [보유 골드]");
-                Console.WriteLine(" {0} G", gold);
+                Console.WriteLine(" 인벤토리");
+                Console.WriteLine(" 보유 중인 아이템을 관리할 수 있습니다.");
                 Console.WriteLine("");
                 Console.WriteLine(" [아이템 목록]");
-                StoreItemList(1);
+                InventoryItemList(0); //x=0:인벤토리 x=1:장착관리
+                Console.WriteLine("");
+                Console.WriteLine(" 1. 장착 관리");
+                Console.WriteLine(" 0. 나가기");
+                Console.WriteLine("");
+                Console.Write(" 원하시는 행동을 입력해주세요. \n >> ");
+            }
+
+            //인벤토리-장착관리 화면
+            public void ItemOnOffScene()
+            {
+                Console.WriteLine("");
+                Console.WriteLine("");
+                Console.WriteLine(" 인벤토리 - 장착 관리");
+                Console.WriteLine(" 보유 중인 아이템을 관리할 수 있습니다.");
+                Console.WriteLine("");
+                Console.WriteLine(" [아이템 목록]");
+                InventoryItemList(1); //x=0:인벤토리 x=1:장착관리
                 Console.WriteLine("");
                 Console.WriteLine(" 0. 나가기");
                 Console.WriteLine("");
@@ -439,43 +336,204 @@ namespace Sparta2ndWeek
                 }
             }
 
-            //인벤토리-장착관리 화면
-            public void ItemOnOffScene()
+            //상점 화면
+            public void StoreScene()
             {
                 Console.WriteLine("");
                 Console.WriteLine("");
-                Console.WriteLine(" 인벤토리 - 장착 관리");
-                Console.WriteLine(" 보유 중인 아이템을 관리할 수 있습니다.");
+                Console.WriteLine(" 상점");
+                Console.WriteLine(" 필요한 아이템을 얻을 수 있는 상점입니다.");
+                Console.WriteLine("");
+                Console.WriteLine(" [보유 골드]");
+                Console.WriteLine(" {0} G", gold);
                 Console.WriteLine("");
                 Console.WriteLine(" [아이템 목록]");
-                InventoryItemList(1); //x=0:인벤토리 x=1:장착관리
+                StoreItemList(0);
+                Console.WriteLine("");
+                Console.WriteLine(" 1. 아이템 구매");
+                Console.WriteLine(" 0. 나가기");
+                Console.WriteLine("");
+                Console.Write(" 원하시는 행동을 입력해주세요. \n >> ");
+            }
+
+            //상점-아이템구매 화면
+            public void Buy()
+            {
+                Console.WriteLine("");
+                Console.WriteLine("");
+                Console.WriteLine(" 상점 - 아이템 구매");
+                Console.WriteLine(" 필요한 아이템을 얻을 수 있는 상점입니다.");
+                Console.WriteLine("");
+                Console.WriteLine(" [보유 골드]");
+                Console.WriteLine(" {0} G", gold);
+                Console.WriteLine("");
+                Console.WriteLine(" [아이템 목록]");
+                StoreItemList(1);
                 Console.WriteLine("");
                 Console.WriteLine(" 0. 나가기");
                 Console.WriteLine("");
                 Console.Write(" 원하시는 행동을 입력해주세요. \n >> ");
             }
 
-            //인벤토리 화면
-            public void InventoryScene()
+            //아이템 목록(상점,아이템구매)
+            public void StoreItemList(int x) //x=0: 상점 //x=-1: 아이템구매
             {
-                Console.WriteLine("");
-                Console.WriteLine("");
-                Console.WriteLine(" 인벤토리");
-                Console.WriteLine(" 보유 중인 아이템을 관리할 수 있습니다.");
-                Console.WriteLine("");
-                Console.WriteLine(" [아이템 목록]");
-                InventoryItemList(0); //x=0:인벤토리 x=1:장착관리
-                Console.WriteLine("");
-                Console.WriteLine(" 1. 장착 관리");
-                Console.WriteLine(" 0. 나가기");
-                Console.WriteLine("");
-                Console.Write(" 원하시는 행동을 입력해주세요. \n >> ");
+                int[,] itemArray = new int[6, 3]
+                {
+                    {0, 1, 2},
+                    {0, 1, 2},
+                    {0, 1, 2},
+                    {0, 1, 2},
+                    {0, 1, 2},
+                    {0, 1, 2}
+                };
+                for (int i = 0; i < 6; i++)
+                {
+                    for (int j = 0; j < 3; j++)
+                    {
+                        if (itemArray[i, j] == 0 && x == 0)
+                        {
+                            Console.Write(" - ");
+                        }
+                        else if (itemArray[i, j] == 0 && x == 1)
+                        {
+                            int k = i + 1;
+                            Console.Write(" - {0} ", k);
+                        }
+                        else if (itemArray[i, j] == 1)
+                        {
+                            switch (i)
+                            {
+                                case 0:
+                                    string v0 = "수련자 갑옷     | 방어력 +5  | 수련에 도움을 주는 갑옷입니다.                   ";
+                                    if (!originalValueList.Contains(v0) && !statsDic.ContainsKey(i + 1))
+                                    {
+                                        originalValueList.Add(v0);
+                                        statsDic.Add(i + 1, 5);
+                                    }
+                                    Console.Write(v0);
+                                    break;
+                                case 1:
+                                    string v1 = "무쇠갑옷        | 방어력 +9  | 무쇠로 만들어져 튼튼한 갑옷입니다.               ";
+                                    if (!originalValueList.Contains(v1) && !statsDic.ContainsKey(i + 1))
+                                    {
+                                        originalValueList.Add(v1);
+                                        statsDic.Add(i + 1, 9);
+                                    }
+                                    Console.Write(v1);
+                                    break;
+                                case 2:
+                                    string v2 = "스파르타의 갑옷 | 방어력 +15 | 스파르타의 전사들이 사용했다는 전설의 갑옷입니다.";
+                                    if (!originalValueList.Contains(v2) && !statsDic.ContainsKey(i + 1))
+                                    {
+                                        originalValueList.Add(v2);
+                                        statsDic.Add(i + 1, 15);
+                                    }
+                                    Console.Write(v2);
+                                    break;
+                                case 3:
+                                    string v3 = "낡은 검         | 공격력 +2  | 쉽게 볼 수 있는 낡은 검 입니다.                  ";
+                                    if (!originalValueList.Contains(v3) && !statsDic.ContainsKey(i + 1))
+                                    {
+                                        originalValueList.Add(v3);
+                                        statsDic.Add(i + 1, 2);
+                                    }
+                                    Console.Write(v3);
+                                    break;
+                                case 4:
+                                    string v4 = "청동 도끼       | 공격력 +5  |  어디선가 사용됐던거 같은 도끼입니다.            ";
+                                    if (!originalValueList.Contains(v4) && !statsDic.ContainsKey(i + 1))
+                                    {
+                                        originalValueList.Add(v4);
+                                        statsDic.Add(i + 1, 5);
+                                    }
+                                    Console.Write(v4);
+                                    break;
+                                case 5:
+                                    string v5 = "스파르타의 창   | 공격력 +7  | 스파르타의 전사들이 사용했다는 전설의 창입니다.  ";
+                                    if (!originalValueList.Contains(v5) && !statsDic.ContainsKey(i + 1))
+                                    {
+                                        originalValueList.Add(v5);
+                                        statsDic.Add(i + 1, 7);
+                                    }
+                                    Console.Write(v5);
+                                    break;
+                            }
+                        }
+                        else if (itemArray[i, j] == 2)
+                        {
+                            switch (i)
+                            {
+                                case 0:
+                                    if (x == 0 && boughtDic.ContainsKey(1)) //구매된 아이템 딕셔너리에서 1번 키값이 존재하면, 상점창에 구매완료 표시
+                                        Console.Write("| 구매완료");
+                                    else
+                                    {
+                                        Console.Write("| 1000 G");
+                                        if (!priceDic.ContainsKey(i + 1))
+                                            priceDic.Add(i + 1, 1000);
+                                    }
+                                    break;
+                                case 1:
+                                    if (x == 0 && boughtDic.ContainsKey(2))
+                                        Console.Write("| 구매완료");
+                                    else
+                                    {
+                                        Console.Write("| 1800 G");
+                                        if (!priceDic.ContainsKey(i + 1))
+                                            priceDic.Add(i + 1, 1800);
+                                    }
+                                    break;
+                                case 2:
+                                    if (x == 0 && boughtDic.ContainsKey(3))
+                                        Console.Write("| 구매완료");
+                                    else
+                                    {
+                                        Console.Write("| 3500 G");
+                                        if (!priceDic.ContainsKey(i + 1))
+                                            priceDic.Add(i + 1, 3500);
+                                    }
+                                    break;
+                                case 3:
+                                    if (x == 0 && boughtDic.ContainsKey(4))
+                                        Console.Write("| 구매완료");
+                                    else
+                                    {
+                                        Console.Write("| 600 G");
+                                        if (!priceDic.ContainsKey(i + 1))
+                                            priceDic.Add(i + 1, 600);
+                                    }
+                                    break;
+                                case 4:
+                                    if (x == 0 && boughtDic.ContainsKey(5))
+                                        Console.Write("| 구매완료");
+                                    else
+                                    {
+                                        Console.Write("| 1500 G");
+                                        if (!priceDic.ContainsKey(i + 1))
+                                            priceDic.Add(i + 1, 1500);
+                                    }
+                                    break;
+                                case 5:
+                                    if (x == 0 && boughtDic.ContainsKey(6))
+                                        Console.Write("| 구매완료");
+                                    else
+                                    {
+                                        Console.Write("| 2700 G");
+                                        if (!priceDic.ContainsKey(i + 1))
+                                            priceDic.Add(i + 1, 2700);
+                                    }
+                                    break;
+                            }
+                        }
+                    }
+                    Console.WriteLine();
+                }
             }
-
             //아이템 장착에 따른 스탯 변경(상태보기)
             public void ChangedStats()
             {
-                int [] playerStats = { 1, 10, 5, 100 };
+                int[] playerStats = { 1, 10, 5, 100 };
                 int level = playerStats[0];
                 int atk = playerStats[1];
                 int def = playerStats[2];
@@ -486,7 +544,7 @@ namespace Sparta2ndWeek
                 {
                     for (int i = 0; i < statsReflectList.Count; i++)
                     {
-                        if (statsReflectList[i] == "수련자 갑옷     | 방어력 +5  | 수련에 도움을 주는 갑옷입니다.                   ")
+                        if (statsReflectList[i] == originalValueList[i])
                         {
                             d = 5;
                             def += d;
@@ -532,22 +590,6 @@ namespace Sparta2ndWeek
                 else
                     Console.WriteLine(" 방어력 : {0}", def);
                 Console.WriteLine(" 체 력 : {0}", hp);
-            }
-
-            //상태보기 화면
-            public void StatsScene()
-            {
-                Console.WriteLine("");
-                Console.WriteLine("");
-                Console.WriteLine(" 상태 보기");
-                Console.WriteLine(" 캐릭터의 정보가 표시됩니다.");
-                Console.WriteLine("");
-                ChangedStats();
-                Console.WriteLine(" Gold : {0} G", gold);
-                Console.WriteLine("");
-                Console.WriteLine(" 0. 나가기");
-                Console.WriteLine("");
-                Console.Write(" 원하시는 행동을 입력해주세요. \n >> ");
             }
         }
     }
