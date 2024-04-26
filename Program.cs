@@ -6,6 +6,7 @@ using System.Reflection.Metadata.Ecma335;
 using System.Security.Cryptography;
 using System.Security.Cryptography.X509Certificates;
 using System.Xml.Linq;
+using System.Linq;
 
 namespace Sparta2ndWeek
 {
@@ -59,7 +60,7 @@ namespace Sparta2ndWeek
                                             startScene.Intro();
                                             break;
                                         }
-                                        else if (chosen <= itemData.NumberOfBought()) //선택한 숫자와 구매아이템 개수에 오류가 없으면,
+                                        else if (chosen <= itemData.NumberOfBought()) 
                                         {
                                             while (true)
                                             {
@@ -108,7 +109,7 @@ namespace Sparta2ndWeek
                                             startScene.Intro();
                                             break;
                                         }
-                                        else if (chosen == 1 || chosen == 2 || chosen == 3 || chosen == 4 || chosen == 5 || chosen == 6)
+                                        else if (chosen <= itemData.OriginalItemNumber()) 
                                         {
                                             while (true)
                                             {
@@ -175,7 +176,7 @@ namespace Sparta2ndWeek
             Dictionary<int, int> priceDic = new Dictionary<int, int>();
 
             //능력치 딕셔너리
-            Dictionary<int, int> statsDic = new Dictionary<int, int>();
+            Dictionary<string, int> statsDic = new Dictionary<string, int>();
 
             //구매목록(구매번호,구매정보) 딕셔너리
             Dictionary<int, string> boughtDic = new Dictionary<int, string>();
@@ -183,25 +184,47 @@ namespace Sparta2ndWeek
             //구매정보 리스트
             List<string> boughtValueList = new List<string>();
 
-            //스탯 반영 리스트(상태보기 전용)
-            List<string> statsReflectList = new List<string>();
-
             //장착목록(장착번호,장착정보) 딕셔너리
             Dictionary<int, string> onDic = new Dictionary<int, string>();
 
+            //공격력인지 방어력인지 확인을 위한 딕셔너리
+            Dictionary<string, string> atkVsDefDic = new Dictionary<string, string>();
+
+            List<int> defList = new List<int>(); //장착한 def 리스트
+            List<int> atkList = new List<int>(); //장착한 atk 리스트
+
+            //기존 아이템 개수
+            public int OriginalItemNumber()
+            {
+                int b = originalValueList.Count;
+                return b;
+            }
 
             //장착 및 해제된 아이템정보 추가
             public void AddOnOffData(int a)
             {
+                int stats;
                 if (!onDic.ContainsKey(a))
                 {
                     onDic.Add(a, boughtValueList[a - 1]); //장착(onDic에 추가)
-                    statsReflectList.Add(boughtValueList[a - 1]);
+                    stats = statsDic[boughtValueList[a - 1]];
+                    if (atkVsDefDic[boughtValueList[a - 1]] == "def") 
+                    {
+                        defList.Add(stats);
+                    }
+                    else
+                        atkList.Add(stats);
                 }
                 else
                 {
                     onDic.Remove(a); //미장착(onDic에서 제거)
-                    statsReflectList.Remove(boughtValueList[a - 1]);
+                    stats = statsDic[boughtValueList[a - 1]];
+                    if (atkVsDefDic[boughtValueList[a - 1]] == "def") 
+                    {
+                        defList.Remove(stats);
+                    }
+                    else
+                        atkList.Remove(stats);
                 }
             }
 
@@ -235,7 +258,7 @@ namespace Sparta2ndWeek
                 int count = boughtDic.Count;
                 if (count == 0) 
                 {
-                    if (a < 1 && a > 6) ////////////////////////////////// a > 기존 아이템 개수 
+                    if (a < 1 && a > OriginalItemNumber()) //a > 기존 아이템 개수 
                         Console.WriteLine(" 잘못된 입력입니다.");
                     else 
                     {
@@ -244,7 +267,7 @@ namespace Sparta2ndWeek
                 }
                 else //데이터 존재
                 {
-                    if (a < 1 && a > 6)
+                    if (a < 1 && a > OriginalItemNumber())
                         Console.WriteLine(" 잘못된 입력입니다.");
                     else
                     {
@@ -406,55 +429,61 @@ namespace Sparta2ndWeek
                             {
                                 case 0:
                                     string v0 = "수련자 갑옷     | 방어력 +5  | 수련에 도움을 주는 갑옷입니다.                   ";
-                                    if (!originalValueList.Contains(v0) && !statsDic.ContainsKey(i + 1))
+                                    if (!originalValueList.Contains(v0))
                                     {
                                         originalValueList.Add(v0);
-                                        statsDic.Add(i + 1, 5);
+                                        statsDic.Add(v0, 5);
+                                        atkVsDefDic.Add(v0,"def");
                                     }
                                     Console.Write(v0);
                                     break;
                                 case 1:
                                     string v1 = "무쇠갑옷        | 방어력 +9  | 무쇠로 만들어져 튼튼한 갑옷입니다.               ";
-                                    if (!originalValueList.Contains(v1) && !statsDic.ContainsKey(i + 1))
+                                    if (!originalValueList.Contains(v1))
                                     {
                                         originalValueList.Add(v1);
-                                        statsDic.Add(i + 1, 9);
+                                        statsDic.Add(v1, 9);
+                                        atkVsDefDic.Add(v1, "def");
                                     }
                                     Console.Write(v1);
                                     break;
                                 case 2:
                                     string v2 = "스파르타의 갑옷 | 방어력 +15 | 스파르타의 전사들이 사용했다는 전설의 갑옷입니다.";
-                                    if (!originalValueList.Contains(v2) && !statsDic.ContainsKey(i + 1))
+                                    if (!originalValueList.Contains(v2))
                                     {
                                         originalValueList.Add(v2);
-                                        statsDic.Add(i + 1, 15);
+                                        statsDic.Add(v2, 15);
+                                        atkVsDefDic.Add(v2, "def");
                                     }
                                     Console.Write(v2);
                                     break;
                                 case 3:
                                     string v3 = "낡은 검         | 공격력 +2  | 쉽게 볼 수 있는 낡은 검 입니다.                  ";
-                                    if (!originalValueList.Contains(v3) && !statsDic.ContainsKey(i + 1))
+                                    if (!originalValueList.Contains(v3))
                                     {
                                         originalValueList.Add(v3);
-                                        statsDic.Add(i + 1, 2);
+                                        statsDic.Add(v3, 2);
+                                        atkVsDefDic.Add(v3, "atk");
                                     }
                                     Console.Write(v3);
                                     break;
                                 case 4:
                                     string v4 = "청동 도끼       | 공격력 +5  |  어디선가 사용됐던거 같은 도끼입니다.            ";
-                                    if (!originalValueList.Contains(v4) && !statsDic.ContainsKey(i + 1))
+                                    if (!originalValueList.Contains(v4))
                                     {
                                         originalValueList.Add(v4);
-                                        statsDic.Add(i + 1, 5);
+                                        statsDic.Add(v4, 5);
+                                        atkVsDefDic.Add(v4, "atk");
                                     }
                                     Console.Write(v4);
                                     break;
                                 case 5:
                                     string v5 = "스파르타의 창   | 공격력 +7  | 스파르타의 전사들이 사용했다는 전설의 창입니다.  ";
-                                    if (!originalValueList.Contains(v5) && !statsDic.ContainsKey(i + 1))
+                                    if (!originalValueList.Contains(v5))
                                     {
                                         originalValueList.Add(v5);
-                                        statsDic.Add(i + 1, 7);
+                                        statsDic.Add(v5, 7);
+                                        atkVsDefDic.Add(v5, "atk");
                                     }
                                     Console.Write(v5);
                                     break;
@@ -530,6 +559,7 @@ namespace Sparta2ndWeek
                     Console.WriteLine();
                 }
             }
+
             //아이템 장착에 따른 스탯 변경(상태보기)
             public void ChangedStats()
             {
@@ -537,56 +567,22 @@ namespace Sparta2ndWeek
                 int level = playerStats[0];
                 int atk = playerStats[1];
                 int def = playerStats[2];
-                int hp = playerStats[3];
-                int a = 0, a1 = 0, a2 = 0, d = 0, d1 = 0, d2 = 0;
-
-                if (statsReflectList != null)
-                {
-                    for (int i = 0; i < statsReflectList.Count; i++)
-                    {
-                        if (statsReflectList[i] == originalValueList[i])
-                        {
-                            d = 5;
-                            def += d;
-                        }
-                        else if (statsReflectList[i] == "무쇠갑옷        | 방어력 +9  | 무쇠로 만들어져 튼튼한 갑옷입니다.               ")
-                        {
-                            d1 = 9;
-                            def += d1;
-                        }
-                        else if (statsReflectList[i] == "스파르타의 갑옷 | 방어력 +15 | 스파르타의 전사들이 사용했다는 전설의 갑옷입니다.")
-                        {
-                            d2 = 15;
-                            def += d2;
-                        }
-                        else if (statsReflectList[i] == "낡은 검         | 공격력 +2  | 쉽게 볼 수 있는 낡은 검 입니다.                  ")
-                        {
-                            a = 2;
-                            atk += a;
-                        }
-                        else if (statsReflectList[i] == "청동 도끼       | 공격력 +5  |  어디선가 사용됐던거 같은 도끼입니다.            ")
-                        {
-                            a1 = 5;
-                            atk += a1;
-                        }
-                        else if (statsReflectList[i] == "스파르타의 창   | 공격력 +7  | 스파르타의 전사들이 사용했다는 전설의 창입니다.  ")
-                        {
-                            a2 = 7;
-                            atk += a2;
-                        }
-                    }
-                }
-                int sumA = a + a1 + a2;
-                int sumD = d + d1 + d2;
+                int hp = playerStats[3];         
                 string sLevel = level.ToString("D2");
                 Console.WriteLine(" Lv. {0}", sLevel);
                 Console.WriteLine(" Shin ( 전사 )");
-                if (sumA > 0)
-                    Console.WriteLine(" 공격력 : {0}(+{1})", atk, sumA);
+                if (atkList.Sum() > 0)
+                {
+                    atk += atkList.Sum();
+                    Console.WriteLine(" 공격력 : {0}(+{1})", atk, atkList.Sum());
+                }
                 else
                     Console.WriteLine(" 공격력 : {0}", atk);
-                if (sumD > 0)
-                    Console.WriteLine(" 방어력 : {0}(+{1})", def, sumD);
+                if (defList.Sum() > 0)
+                {
+                    def += defList.Sum();
+                    Console.WriteLine(" 방어력 : {0}(+{1})", def, defList.Sum());
+                }
                 else
                     Console.WriteLine(" 방어력 : {0}", def);
                 Console.WriteLine(" 체 력 : {0}", hp);
