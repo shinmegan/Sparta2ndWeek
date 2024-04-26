@@ -419,7 +419,7 @@ namespace Sparta2ndWeek
                 {
                     foreach (KeyValuePair<int, string> item in boughtDic)
                     {
-                        if (item.Key != null && !boughtValueList.Contains(item.Value))
+                        if (!boughtValueList.Contains(item.Value))
                             boughtValueList.Add(item.Value);
                     }
                     foreach (string value in boughtValueList)
